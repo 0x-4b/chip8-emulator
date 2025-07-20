@@ -267,6 +267,9 @@ void Chip8::OP_9xy0()
 void Chip8::OP_Annn()
 {
     // Set I = nnn
+    u16 address = opcode & 0x0FFFu;
+
+    index = address;
 }
 
 void Chip8::OP_Bnnn()
