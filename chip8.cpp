@@ -131,6 +131,10 @@ void Chip8::OP_5xy0()
 void Chip8::OP_6xkk()
 {
     // Set Vx = kk
+    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 byte = opcode & 0x00FFu;
+
+    registers[Vx] = byte;
 }
 
 void Chip8::OP_7xkk()
