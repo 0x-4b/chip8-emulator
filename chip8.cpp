@@ -452,6 +452,8 @@ void Chip8::OP_Fx15()
 void Chip8::OP_Fx18()
 {
     // Set sound timer = Vx
+    u8 Vx = (opcode & 0x0F00) > 8u;
+    soundTimer = registers[Vx];
 }
 
 void Chip8::OP_Fx1E()
