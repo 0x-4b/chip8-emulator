@@ -95,6 +95,13 @@ void Chip8::OP_2nnn()
 void Chip8::OP_3xkk()
 {
     // Skip next instruction if Vx == kk
+    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 byte = opcode & 0x00FFu;
+
+    if (registers[Vx] == byte)
+    {
+        pc += 2;
+    }
 }
 
 void Chip8::OP_4xkk()
