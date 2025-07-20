@@ -1,5 +1,4 @@
 #pragma once
-
 #include <iostream>
 #include <chrono>
 #include <cstdint>
@@ -9,6 +8,9 @@
 using u8 = uint8_t;
 using u16 = uint16_t;
 using u32 = uint32_t;
+
+const unsigned int START_ADDRESS = 0x200;
+
 
 class Chip8
 {
@@ -24,4 +26,7 @@ class Chip8
         u8 keypad[16]{};
         u32 video[64 * 32] {};
         u16 opcode{};
+
+
+        void LoadRoam(char* const filename);
 };
