@@ -79,6 +79,8 @@ void Chip8::OP_0nnn()
 void Chip8::OP_1nnn()
 {
     // Jump to location nnn
+    u16 address = opcode & 0xFFFu;
+    pc = address;
 }
 
 void Chip8::OP_2nnn()
