@@ -95,7 +95,7 @@ void Chip8::OP_2nnn()
 void Chip8::OP_3xkk()
 {
     // Skip next instruction if Vx == kk
-    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
     u8 byte = opcode & 0x00FFu;
 
     if (registers[Vx] == byte)
@@ -107,7 +107,7 @@ void Chip8::OP_3xkk()
 void Chip8::OP_4xkk()
 {
     // Skip next instruction if Vx != kk
-    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
     u8 byte = opcode & 0x00FFu;
 
     if (registers[Vx] != byte)
@@ -119,8 +119,8 @@ void Chip8::OP_4xkk()
 void Chip8::OP_5xy0()
 {
     // Skip next instruction if Vx == Vy
-    u8 Vx = (opcode & 0x0F00u) >> 8;
-    u8 Vy = (opcode & 0x00F0u) >> 4;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
+    u8 Vy = (opcode & 0x00F0u) >> 4u;
 
     if (registers[Vx] == registers[Vy])
     {
@@ -131,7 +131,7 @@ void Chip8::OP_5xy0()
 void Chip8::OP_6xkk()
 {
     // Set Vx = kk
-    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
     u8 byte = opcode & 0x00FFu;
 
     registers[Vx] = byte;
@@ -140,7 +140,7 @@ void Chip8::OP_6xkk()
 void Chip8::OP_7xkk()
 {
     // Set Vx = Vx + kk
-    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
     u8 byte = opcode & 0x00FFu;
 
     registers[Vx] += byte;
@@ -149,8 +149,8 @@ void Chip8::OP_7xkk()
 void Chip8::OP_8xy0()
 {
     // Set Vx = Vy
-    u8 Vx = (opcode & 0x0F00u) >> 8;
-    u8 Vy = (opcode & 0x00F0u) >> 4;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
+    u8 Vy = (opcode & 0x00F0u) >> 4u;
 
     registers[Vx] = registers[Vy];
 }
@@ -158,8 +158,8 @@ void Chip8::OP_8xy0()
 void Chip8::OP_8xy1()
 {
     // Set Vx = Vx OR Vy
-    u8 Vx = (opcode & 0x0F00u) >> 8;
-    u8 Vy = (opcode & 0x00F0u) >> 4;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
+    u8 Vy = (opcode & 0x00F0u) >> 4u;
 
     registers[Vx] |= registers[Vy];
 }
@@ -167,8 +167,8 @@ void Chip8::OP_8xy1()
 void Chip8::OP_8xy2()
 {
     // Set Vx = Vx AND Vy
-    u8 Vx = (opcode & 0x0F00u) >> 8;
-    u8 Vy = (opcode & 0x00F0u) >> 4;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
+    u8 Vy = (opcode & 0x00F0u) >> 4u;
 
     registers[Vx] &= registers[Vy];
 }
@@ -176,8 +176,8 @@ void Chip8::OP_8xy2()
 void Chip8::OP_8xy3()
 {
     // Set Vx = Vx XOR Vy
-    u8 Vx = (opcode & 0x0F00u) >> 8;
-    u8 Vy = (opcode & 0x00F0u) >> 4;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
+    u8 Vy = (opcode & 0x00F0u) >> 4u;
 
     registers[Vx] ^= registers[Vy];
 }
@@ -185,8 +185,8 @@ void Chip8::OP_8xy3()
 void Chip8::OP_8xy4()
 {
     // Set Vx = Vx + Vy, set VF = carry
-    u8 Vx = (opcode & 0x0F00u) >> 8;
-    u8 Vy = (opcode & 0x00F0u) >> 4;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
+    u8 Vy = (opcode & 0x00F0u) >> 4u;
 
     u8 sum = registers[Vx] + registers[Vy];
 
@@ -204,8 +204,8 @@ void Chip8::OP_8xy4()
 void Chip8::OP_8xy5()
 {
     // Set Vx = Vx - Vy, set VF = NOT borrow
-    u8 Vx = (opcode & 0x0F00u) >> 8;
-    u8 Vy = (opcode & 0x00F0u) >> 4;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
+    u8 Vy = (opcode & 0x00F0u) >> 4u;
 
     if (registers[Vx] > registers[Vy])
     {
@@ -221,7 +221,7 @@ void Chip8::OP_8xy5()
 void Chip8::OP_8xy6()
 {
     // Set Vx = Vx >> 1, VF = least significant bit before shift
-    u8 Vx = (opcode & 0x0F00) >> 8;
+    u8 Vx = (opcode & 0x0F00) >> 8u;
     registers[0xF] = (registers[Vx] & 0x1u);
     registers[Vx] >>= 1;
 }
@@ -229,8 +229,8 @@ void Chip8::OP_8xy6()
 void Chip8::OP_8xy7()
 {
     // Set Vx = Vy - Vx, set VF = NOT borrow
-    u8 Vx = (opcode & 0x0F00u) >> 8;
-    u8 Vy = (opcode & 0x00F0u) >> 4;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
+    u8 Vy = (opcode & 0x00F0u) >> 4u;
 
     if (registers[Vy] > registers[Vx])
     {
@@ -246,7 +246,7 @@ void Chip8::OP_8xy7()
 void Chip8::OP_8xyE()
 {
     // Set Vx = Vx << 1, VF = most significant bit before shift
-    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
 
     registers[0xF] = (registers[Vx] & 0x80u) >> 7u;
     registers[Vx] <<= 1;
@@ -255,8 +255,8 @@ void Chip8::OP_8xyE()
 void Chip8::OP_9xy0()
 {
     // Skip next instruction if Vx != Vy
-    u8 Vx = (opcode & 0x0F00u) >> 8;
-    u8 Vy = (opcode & 0x00F0u) >> 4;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
+    u8 Vy = (opcode & 0x00F0u) >> 4u;
 
     if (registers[Vx] != registers[Vy])
     {
@@ -283,7 +283,7 @@ void Chip8::OP_Bnnn()
 void Chip8::OP_Cxkk()
 {
     // Set Vx = random byte AND kk
-    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
     u8 byte = opcode & 0x00FFu;
 
     registers[Vx] = randByte(randGen) & byte;
@@ -292,8 +292,8 @@ void Chip8::OP_Cxkk()
 void Chip8::OP_Dxyn()
 {
     // Display n-byte sprite starting at memory[I] at (Vx, Vy), set VF = collision
-    u8 Vx = (opcode & 0x0F00u) >> 8;
-    u8 Vy = (opcode & 0x00F0u) >> 4;
+    u8 Vx = (opcode & 0x0F00u) >> 8u;
+    u8 Vy = (opcode & 0x00F0u) >> 4u;
     u8 height = opcode & 0x000Fu;
 
     u8 xPos = registers[Vx] % VIDEO_WIDTH;
