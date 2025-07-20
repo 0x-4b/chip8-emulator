@@ -165,11 +165,6 @@ void Chip8::OP_00EE()
     pc = stack[sp];
 }
 
-void Chip8::OP_0nnn()
-{
-    // SYS addr (ignored in modern interpreters)
-}
-
 void Chip8::OP_1nnn()
 {
     // Jump to location nnn
