@@ -283,6 +283,10 @@ void Chip8::OP_Bnnn()
 void Chip8::OP_Cxkk()
 {
     // Set Vx = random byte AND kk
+    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 byte = opcode & 0x00FFu;
+
+    registers[Vx] = randByte(randGen) & byte;
 }
 
 void Chip8::OP_Dxyn()
