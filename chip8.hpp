@@ -9,6 +9,8 @@ using u32 = uint32_t;
 const unsigned int START_ADDRESS = 0x200;
 const unsigned int FONTSET_START_ADDRESS = 0x50;
 const unsigned int FONTSET_SIZE = 80;
+const unsigned int VIDEO_WIDTH = 64;
+const unsigned int VIDEO_HEIGHT = 32;
 
 class Chip8
 {
@@ -30,7 +32,7 @@ private:
     u8 delay_timer{};
     u8 sound_timer{};
     u8 keypad[16]{};
-    u32 video[64 * 32]{};
+    u32 video[VIDEO_WIDTH * VIDEO_HEIGHT]{};
     u16 opcode{};
 
     void OP_00E0();
