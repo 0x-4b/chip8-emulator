@@ -1,5 +1,10 @@
 #include "chip8.hpp"
 
+Chip8::Chip8()
+{
+    pc = START_ADDRESS;
+}
+
 void Chip8::LoadRoam(char *const filename)
 {
     std::ifstream file(filename, std::ios::binary | std::ios::ate);

@@ -15,6 +15,7 @@ const unsigned int START_ADDRESS = 0x200;
 class Chip8
 {
     public:
+        Chip8();
         u8 registers[16] {};
         u8 memory[4096] {};
         u16 index{};
