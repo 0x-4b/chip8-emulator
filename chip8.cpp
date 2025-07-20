@@ -176,6 +176,10 @@ void Chip8::OP_8xy2()
 void Chip8::OP_8xy3()
 {
     // Set Vx = Vx XOR Vy
+    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 Vy = (opcode & 0x00F0u) >> 4;
+
+    registers[Vx] ^= registers[Vy];
 }
 
 void Chip8::OP_8xy4()
