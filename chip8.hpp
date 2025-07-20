@@ -70,7 +70,7 @@ private:
     void OP_Fx33();
     void OP_Fx55();
     void OP_Fx65();
-    void OP_NULL() {};
+    void OP_NULL();
 
     void Table0();
     void Table8();
