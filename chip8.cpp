@@ -466,6 +466,10 @@ void Chip8::OP_Fx1E()
 void Chip8::OP_Fx29()
 {
     // Set I = location of sprite for digit Vx
+    u8 Vx = (opcode & 0x0F00) > 8u;
+    u8 digit = registers[Vx];
+
+    index = FONTSET_START_ADDRESS + (5 * digit);
 }
 
 void Chip8::OP_Fx33()
