@@ -221,6 +221,9 @@ void Chip8::OP_8xy5()
 void Chip8::OP_8xy6()
 {
     // Set Vx = Vx >> 1, VF = least significant bit before shift
+    u8 Vx = (opcode & 0x0F00) >> 8;
+    registers[0xF] = (registers[Vx] & 0x1u);
+    Vx >> 1;
 }
 
 void Chip8::OP_8xy7()
