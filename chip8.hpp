@@ -10,6 +10,7 @@ using u16 = uint16_t;
 using u32 = uint32_t;
 
 const unsigned int START_ADDRESS = 0x200;
+const unsigned int FONTSET_START_ADDRESS = 0x50;
 const unsigned int FONTSET_SIZE = 80;
 
 class Chip8

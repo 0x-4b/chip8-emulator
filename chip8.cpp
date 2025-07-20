@@ -3,6 +3,11 @@
 Chip8::Chip8()
 {
     pc = START_ADDRESS;
+
+    for (long i = 0; i < FONTSET_SIZE; i++)
+    {
+        memory[FONTSET_START_ADDRESS + i] = fontset[i];
+    }
 }
 
 void Chip8::LoadRoam(char *const filename)
@@ -20,7 +25,7 @@ void Chip8::LoadRoam(char *const filename)
 
         for (long i = 0; i < size; i++)
         {
-            memory[START_ADDRESS + 1] = buffer[i];
+            memory[START_ADDRESS + i] = buffer[i];
         }
 
         delete[] buffer;
