@@ -335,6 +335,13 @@ void Chip8::OP_Ex9E()
 void Chip8::OP_ExA1()
 {
     // Skip next instruction if key with the value of Vx is not pressed
+    u8 Vx = (opcode & 0x0F00) >> 8u;
+    u8 key = registers[Vx];
+
+    if (!keypad[key])
+    {
+        pc += 2;
+    }
 }
 
 void Chip8::OP_Fx07()
