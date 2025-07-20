@@ -490,6 +490,12 @@ void Chip8::OP_Fx33()
 void Chip8::OP_Fx55()
 {
     // Store registers V0 through Vx in memory starting at location I
+    u8 Vx = (opcode & 0x0F00) > 8u;
+
+    for (u8 i = 0; i <= Vx; ++i)
+    {
+        memory[index + i] = registers[i];
+    }
 }
 
 void Chip8::OP_Fx65()
