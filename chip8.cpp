@@ -67,6 +67,8 @@ void Chip8::OP_00E0()
 void Chip8::OP_00EE()
 {
     // Return from subroutine
+    --sp;
+    pc = stack[sp];
 }
 
 void Chip8::OP_0nnn()
