@@ -347,6 +347,8 @@ void Chip8::OP_ExA1()
 void Chip8::OP_Fx07()
 {
     // Set Vx = delay timer value
+    u8 Vx = (opcode & 0x0F00) >> 8u;
+    registers[Vx] = delayTimer;
 }
 
 void Chip8::OP_Fx0A()

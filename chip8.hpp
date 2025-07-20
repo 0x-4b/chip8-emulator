@@ -29,8 +29,8 @@ private:
     u16 pc{};
     u16 stack[16]{};
     u8 sp{};
-    u8 delay_timer{};
-    u8 sound_timer{};
+    u8 delayTimer{};
+    u8 soundTimer{};
     u8 keypad[16]{};
     u32 video[VIDEO_WIDTH * VIDEO_HEIGHT]{};
     u16 opcode{};
