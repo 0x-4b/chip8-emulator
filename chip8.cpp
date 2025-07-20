@@ -459,6 +459,8 @@ void Chip8::OP_Fx18()
 void Chip8::OP_Fx1E()
 {
     // Set I = I + Vx
+    u8 Vx = (opcode & 0x0F00) > 8u;
+    index += registers[Vx];
 }
 
 void Chip8::OP_Fx29()
