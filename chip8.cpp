@@ -275,6 +275,9 @@ void Chip8::OP_Annn()
 void Chip8::OP_Bnnn()
 {
     // Jump to location nnn + V0
+    u16 address = opcode & 0x0FFFu;
+
+    pc = registers[0] + address;
 }
 
 void Chip8::OP_Cxkk()
