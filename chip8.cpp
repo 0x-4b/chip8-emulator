@@ -292,6 +292,32 @@ void Chip8::OP_Cxkk()
 void Chip8::OP_Dxyn()
 {
     // Display n-byte sprite starting at memory[I] at (Vx, Vy), set VF = collision
+    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 Vy = (opcode & 0x00F0u) >> 4;
+    u8 height = opcode & 0x000Fu;
+
+    u8 xPos = registers[Vx] % VIDEO_WIDTH;
+    u8 yPos = registers[Vy] % VIDEO_HEIGHT;
+    registers[0xF] = 0;
+    for (unsigned int row = 0; row < height; ++row)
+    {
+        u8 spriteByte = memory[index + row];
+
+        for (unsigned int col = 0; col < 8; ++col)
+        {
+            u8 spritePixel = spriteByte & (0x80u >> col);
+            u32 *screenPixel = &video[(yPos + row) * VIDEO_WIDTH + (xPos + col)];
+            if (spritePixel)
+            {
+                if (*screenPixel == 0xFFFFFFFF)
+                {
+                    registers[0xF] = 1;
+                }
+
+                *screenPixel ^= 0xFFFFFFFF;
+            }
+        }
+    }
 }
 
 void Chip8::OP_Ex9E()
