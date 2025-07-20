@@ -501,4 +501,10 @@ void Chip8::OP_Fx55()
 void Chip8::OP_Fx65()
 {
     // Read registers V0 through Vx from memory starting at location I
+    u8 Vx = (opcode & 0x0F00) > 8u;
+
+    for (u8 i = 0; i <= Vx; ++i)
+    {
+        registers[i] = memory[index + i];
+    }
 }
