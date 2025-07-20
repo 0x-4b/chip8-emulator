@@ -119,6 +119,13 @@ void Chip8::OP_4xkk()
 void Chip8::OP_5xy0()
 {
     // Skip next instruction if Vx == Vy
+    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 Vy = (opcode & 0x00F0u) >> 4;
+
+    if (registers[Vx] == registers[Vy])
+    {
+        pc += 2;
+    }
 }
 
 void Chip8::OP_6xkk()
