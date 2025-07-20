@@ -19,6 +19,8 @@ public:
 
     void LoadRoam(char *const filename);
 
+    void Cycle();
+
 private:
     std::default_random_engine randGen;
     std::uniform_int_distribution<u8> randByte;
