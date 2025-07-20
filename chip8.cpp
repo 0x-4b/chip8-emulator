@@ -475,6 +475,16 @@ void Chip8::OP_Fx29()
 void Chip8::OP_Fx33()
 {
     // Store BCD representation of Vx in memory locations I, I+1, and I+2
+    u8 Vx = (opcode & 0x0F00) > 8u;
+    u8 value = registers[Vx];
+
+    memory[index + 2] = value % 10;
+    value /= 10;
+
+    memory[index + 1] = value % 10;
+    value /= 10;
+
+    memory[index] = value % 10;
 }
 
 void Chip8::OP_Fx55()
