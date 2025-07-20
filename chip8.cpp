@@ -1,4 +1,6 @@
 #include "chip8.hpp"
+#include <cstdint>
+#include <cstring>
 #include <chrono>
 #include <fstream>
 
@@ -59,6 +61,7 @@ void Chip8::LoadRoam(char *const filename)
 void Chip8::OP_00E0()
 {
     // Clear the display
+    memset(video, 0, sizeof(video));
 }
 
 void Chip8::OP_00EE()
