@@ -229,6 +229,18 @@ void Chip8::OP_8xy6()
 void Chip8::OP_8xy7()
 {
     // Set Vx = Vy - Vx, set VF = NOT borrow
+    u8 Vx = (opcode & 0x0F00u) >> 8;
+    u8 Vy = (opcode & 0x00F0u) >> 4;
+
+    if (registers[Vy] > registers[Vx])
+    {
+        registers[0xF] = 1;
+    }
+    else
+    {
+        registers[0xF] = 0;
+    }
+    registers[Vx] = registers[Vy] - registers[Vx];
 }
 
 void Chip8::OP_8xyE()
