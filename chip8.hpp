@@ -17,6 +17,10 @@ class Chip8
 {
 public:
     Chip8();
+
+    std::default_random_engine randGen;
+    std::uniform_int_distribution<u8> randByte;
+
     u8 registers[16]{};
     u8 memory[4096]{};
     u16 index{};

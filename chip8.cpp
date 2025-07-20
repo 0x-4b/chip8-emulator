@@ -1,8 +1,10 @@
 #include "chip8.hpp"
 
-Chip8::Chip8()
+Chip8::Chip8() : randGen(std::chrono::system_clock::now().time_since_epoch().count())
 {
     pc = START_ADDRESS;
+
+    randByte = std::uniform_int_distribution<u8>(0, 255U);
 
     for (long i = 0; i < FONTSET_SIZE; i++)
     {
