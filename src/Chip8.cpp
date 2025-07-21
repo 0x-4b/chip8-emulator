@@ -136,24 +136,30 @@ void Chip8::LoadROM(const char *filename)
 }
 void Chip8::Cycle()
 {
-    opcode = (memory[pc] << 8) | memory[pc + 1];  // Make opcode a class member or pass it properly
+    opcode = (memory[pc] << 8) | memory[pc + 1]; // Make opcode a class member or pass it properly
 
     ((*this).*(table[(opcode & 0xF000) >> 12u]))();
 
-    // Opcodes that modify pc directly (jump/call/return) do NOT increment pc here
-    // So we increment pc only if opcode did NOT change it
-    if (!((opcode & 0xF000) == 0x1000 ||  // 1nnn
-          (opcode & 0xF000) == 0x2000 ||  // 2nnn
-          opcode == 0x00EE ||              // 00EE
-          (opcode & 0xF000) == 0xB000))   // Bnnn
+    if (!((opcode & 0xF000) == 0x1000 || // 1nnn - jump
+          (opcode & 0xF000) == 0x2000 || // 2nnn - call
+          opcode == 0x00EE ||            // 00EE - return
+          (opcode & 0xF000) == 0xB000 || // Bnnn - jump + V0
+          // Add the conditional skip instructions:
+          ((opcode & 0xF000) == 0x3000) || // 3xkk
+          ((opcode & 0xF000) == 0x4000) || // 4xkk
+          ((opcode & 0xF000) == 0x5000) || // 5xy0
+          ((opcode & 0xF000) == 0x9000) || // 9xy0
+          ((opcode & 0xF0FF) == 0xE09E) || // Ex9E
+          ((opcode & 0xF0FF) == 0xE0A1)))  // ExA1
     {
         pc += 2;
     }
 
-    if (delayTimer > 0) delayTimer--;
-    if (soundTimer > 0) soundTimer--;
+    if (delayTimer > 0)
+        delayTimer--;
+    if (soundTimer > 0)
+        soundTimer--;
 }
-
 
 void Chip8::OP_00E0()
 {
@@ -452,7 +458,7 @@ void Chip8::OP_Fx0A()
         if (keypad[key])
         {
             registers[Vx] = key;
-            pc += 2;  // Advance only when a key is pressed
+            pc += 2; // Advance only when a key is pressed
             return;
         }
     }
