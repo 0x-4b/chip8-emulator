@@ -451,18 +451,25 @@ void Chip8::OP_Fx07()
 
 void Chip8::OP_Fx0A()
 {
+     // Wait for a key press, store the value of the key in Vx
     u8 Vx = (opcode & 0x0F00) >> 8u;
-
+    
+    bool keyPressed = false;
     for (u8 key = 0; key < 16; ++key)
     {
         if (keypad[key])
         {
             registers[Vx] = key;
-            return;  // Key found, continue normally
+            keyPressed = true;
+            break;
         }
     }
-    // If no key pressed, decrement PC to stay on this instruction
-    pc -= 2;
+    
+    // If no key is pressed, go back to the previous PC to repeat this instruction
+    if (!keyPressed)
+    {
+        pc -= 2;
+    }
 }
 
 void Chip8::OP_Fx15()
