@@ -458,11 +458,11 @@ void Chip8::OP_Fx0A()
         if (keypad[key])
         {
             registers[Vx] = key;
-            pc += 2; // Advance only when a key is pressed
-            return;
+            return;  // Key found, continue normally
         }
     }
-    // If no key pressed, do NOT advance pc — wait here
+    // If no key pressed, decrement PC to stay on this instruction
+    pc -= 2;
 }
 
 void Chip8::OP_Fx15()
