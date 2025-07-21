@@ -3,6 +3,7 @@
 #include <cstring>
 #include <chrono>
 #include <fstream>
+#include <iostream>
 
 uint8_t fontset[FONTSET_SIZE] =
     {
@@ -110,47 +111,49 @@ void Chip8::TableF()
 {
     ((*this).*(tableF[opcode & 0x00FFu]))();
 }
-
-void Chip8::LoadRoam(char *const filename)
+void Chip8::LoadROM(const char *filename)
 {
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
-
-    if (file.is_open())
+    if (!file.is_open())
     {
-        std::streampos size = file.tellg();
-        char *buffer = new char[size];
-
-        file.seekg(0, std::ios::beg);
-        file.read(buffer, size);
-        file.close();
-
-        for (long i = 0; i < size; i++)
-        {
-            memory[START_ADDRESS + i] = buffer[i];
-        }
-
-        delete[] buffer;
+        std::cerr << "Failed to open ROM: " << filename << '\n';
+        return;
     }
-}
 
+    std::streampos size = file.tellg();
+    std::vector<char> buffer(size);
+
+    file.seekg(0, std::ios::beg);
+    file.read(buffer.data(), size);
+    file.close();
+
+    for (long i = 0; i < size; ++i)
+    {
+        memory[0x200 + i] = buffer[i];
+    }
+
+    std::cout << "ROM loaded into memory at 0x200, size: " << size << " bytes\n";
+}
 void Chip8::Cycle()
 {
-    opcode = (memory[pc] << 8u) | memory[pc + 1];
-
-    pc += 2;
+    opcode = (memory[pc] << 8) | memory[pc + 1];  // Make opcode a class member or pass it properly
 
     ((*this).*(table[(opcode & 0xF000) >> 12u]))();
 
-    if (delayTimer > 0)
+    // Opcodes that modify pc directly (jump/call/return) do NOT increment pc here
+    // So we increment pc only if opcode did NOT change it
+    if (!((opcode & 0xF000) == 0x1000 ||  // 1nnn
+          (opcode & 0xF000) == 0x2000 ||  // 2nnn
+          opcode == 0x00EE ||              // 00EE
+          (opcode & 0xF000) == 0xB000))   // Bnnn
     {
-        delayTimer--;
+        pc += 2;
     }
 
-    if (soundTimer > 0)
-    {
-        soundTimer--;
-    }
+    if (delayTimer > 0) delayTimer--;
+    if (soundTimer > 0) soundTimer--;
 }
+
 
 void Chip8::OP_00E0()
 {
@@ -304,7 +307,7 @@ void Chip8::OP_8xy5()
     {
         registers[0xF] = 0;
     }
-    registers[Vy] -= registers[Vx];
+    registers[Vx] -= registers[Vy];
 }
 
 void Chip8::OP_8xy6()
@@ -442,120 +445,45 @@ void Chip8::OP_Fx07()
 
 void Chip8::OP_Fx0A()
 {
-    // Wait for a key press, store the value of the key in Vx
     u8 Vx = (opcode & 0x0F00) >> 8u;
 
-    if (keypad[0])
+    for (u8 key = 0; key < 16; ++key)
     {
-        registers[Vx] = 0;
+        if (keypad[key])
+        {
+            registers[Vx] = key;
+            pc += 2;  // Advance only when a key is pressed
+            return;
+        }
     }
-
-    else if (keypad[1])
-    {
-        registers[Vx] = 1;
-    }
-
-    else if (keypad[2])
-    {
-        registers[Vx] = 2;
-    }
-
-    else if (keypad[3])
-    {
-        registers[Vx] = 3;
-    }
-
-    else if (keypad[4])
-    {
-        registers[Vx] = 4;
-    }
-
-    else if (keypad[5])
-    {
-        registers[Vx] = 5;
-    }
-
-    else if (keypad[6])
-    {
-        registers[Vx] = 6;
-    }
-
-    else if (keypad[7])
-    {
-        registers[Vx] = 7;
-    }
-
-    else if (keypad[8])
-    {
-        registers[Vx] = 8;
-    }
-
-    else if (keypad[9])
-    {
-        registers[Vx] = 9;
-    }
-
-    else if (keypad[10])
-    {
-        registers[Vx] = 10;
-    }
-
-    else if (keypad[11])
-    {
-        registers[Vx] = 11;
-    }
-
-    else if (keypad[12])
-    {
-        registers[Vx] = 12;
-    }
-
-    else if (keypad[13])
-    {
-        registers[Vx] = 13;
-    }
-
-    else if (keypad[14])
-    {
-        registers[Vx] = 14;
-    }
-
-    else if (keypad[15])
-    {
-        registers[Vx] = 15;
-    }
-
-    else
-    {
-        pc += 2;
-    }
+    // If no key pressed, do NOT advance pc — wait here
 }
 
 void Chip8::OP_Fx15()
 {
     // Set delay timer = Vx
-    u8 Vx = (opcode & 0x0F00) > 8u;
+    u8 Vx = (opcode & 0x0F00) >> 8u;
     delayTimer = registers[Vx];
 }
 
 void Chip8::OP_Fx18()
 {
     // Set sound timer = Vx
-    u8 Vx = (opcode & 0x0F00) > 8u;
+    u8 Vx = (opcode & 0x0F00) >> 8u;
     soundTimer = registers[Vx];
 }
 
 void Chip8::OP_Fx1E()
 {
     // Set I = I + Vx
-    u8 Vx = (opcode & 0x0F00) > 8u;
+    u8 Vx = (opcode & 0x0F00) >> 8u;
     index += registers[Vx];
 }
 
 void Chip8::OP_Fx29()
 {
     // Set I = location of sprite for digit Vx
-    u8 Vx = (opcode & 0x0F00) > 8u;
+    u8 Vx = (opcode & 0x0F00) >> 8u;
     u8 digit = registers[Vx];
 
     index = FONTSET_START_ADDRESS + (5 * digit);
@@ -564,7 +492,7 @@ void Chip8::OP_Fx29()
 void Chip8::OP_Fx33()
 {
     // Store BCD representation of Vx in memory locations I, I+1, and I+2
-    u8 Vx = (opcode & 0x0F00) > 8u;
+    u8 Vx = (opcode & 0x0F00) >> 8u;
     u8 value = registers[Vx];
 
     memory[index + 2] = value % 10;
@@ -579,7 +507,7 @@ void Chip8::OP_Fx33()
 void Chip8::OP_Fx55()
 {
     // Store registers V0 through Vx in memory starting at location I
-    u8 Vx = (opcode & 0x0F00) > 8u;
+    u8 Vx = (opcode & 0x0F00) >> 8u;
 
     for (u8 i = 0; i <= Vx; ++i)
     {
@@ -590,7 +518,7 @@ void Chip8::OP_Fx55()
 void Chip8::OP_Fx65()
 {
     // Read registers V0 through Vx from memory starting at location I
-    u8 Vx = (opcode & 0x0F00) > 8u;
+    u8 Vx = (opcode & 0x0F00) >> 8u;
 
     for (u8 i = 0; i <= Vx; ++i)
     {
