@@ -1,0 +1,12 @@
+# Build and output
+build/
+*.o
+*.out
+*.exe
+
+# VS Code settings
+.vscode/
+
+# OS clutter
+.DS_Store
+Thumbs.db
